@@ -16,8 +16,8 @@ BERT-BiLSTM-CRF的Keras版实现
 - preprocess.py 数据预处理，产生模型输入的pickle文件
 - train.py 通过训练集，训练模型
 - test.py 计算模型在测试集中的F1值
-- Modellib 模型位置
-- config 相关参数
+- Modellib.py 模型位置
+- config.py 参数配置
 ## 模型训练
 配置BERT->>执行preprocess.py->>执行train.py
 
