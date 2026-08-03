@@ -8,6 +8,18 @@ from keras.layers import Input, Dense, Concatenate, TimeDistributed,Permute,Repe
 from keras_contrib.layers import CRF
 import MyLayer
 from keras.layers.core import *
+from keras import backend as K
+from keras.engine import Layer
+
+class MaskFloat(Layer):
+    def __init__(self, **kwargs):
+        super(MaskFloat, self).__init__(**kwargs)
+    def call(self, inputs):
+        return inputs
+    def compute_mask(self, inputs, mask=None):
+        if mask is not None:
+            return K.cast(mask, 'float32')
+        return None
 
 def BERT_MODEL(para):
     # for key in para:
@@ -17,6 +29,7 @@ def BERT_MODEL(para):
     repre = Dropout(para["char_dropout"])(mask)
     repre = Dense(300, activation="relu")(repre)
     repre = Bidirectional(LSTM(para["lstm_unit"], return_sequences=True, dropout=para["rnn_dropout"]))(repre)
+    repre = MaskFloat()(repre)
     crf = CRF(para["tag_num"], sparse_target=True)
     crf_output = crf(repre)
     model = Model(input=bert_input, output=crf_output)
